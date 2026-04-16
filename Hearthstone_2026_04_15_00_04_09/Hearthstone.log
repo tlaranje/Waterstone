@@ -1,0 +1,107 @@
+I 00:04:10.1278572 Application paused: False
+I 00:04:12.1724276 Current working dir=Z:\home\tlaranje\Games\Blizzard\Hearthstone
+I 00:04:12.1724276 SetLocale: enUS
+I 00:04:12.1724276 [Jobs Fallback logger]: [JobQueue.QueueJob] Job (DeeplinkService.PostFullLoginJobs(ID:1)) QUEUED
+I 00:04:12.1724276 [Jobs Fallback logger]: [JobQueue.QueueJob] Dependency (WaitForFullLoginFlowComplete) added for queued job (DeeplinkService.PostFullLoginJobs(ID:1))
+I 00:04:12.1724276 Command Line: -launch -uid hs_beta
+I 00:04:13.4161680 Main thread: True
+I 00:04:13.4161680 System Info:
+I 00:04:13.4161680 SystemInfo - Device Name: CACHYOS-X8664
+I 00:04:13.4161680 SystemInfo - Device Model: 82JY (LENOVO)
+I 00:04:13.4161680 SystemInfo - OS: Windows 10  (10.0.19045) 64bit
+I 00:04:13.4161680 SystemInfo - CPU Type: AMD Ryzen 7 5800H with Radeon Graphics
+I 00:04:13.4161680 SystemInfo - CPU Cores: 16
+I 00:04:13.4161680 SystemInfo - System Memory: 13818
+I 00:04:13.4161680 SystemInfo - Screen Resolution: 1920x1080
+I 00:04:13.4161680 SystemInfo - Screen DPI: 96
+I 00:04:13.4161680 SystemInfo - GPU ID: 9568
+I 00:04:13.4161680 SystemInfo - GPU Name: NVIDIA GeForce RTX 3060 Laptop GPU
+I 00:04:13.4161680 SystemInfo - GPU Vendor: NVIDIA
+I 00:04:13.4161680 SystemInfo - GPU Memory: 3072
+I 00:04:13.4161680 SystemInfo - GPU Shader Level: 50
+I 00:04:13.4161680 SystemInfo - GPU NPOT Support: Full
+I 00:04:13.4161680 SystemInfo - Graphics API (version): Direct3D 11.0 [level 11.1]
+I 00:04:13.4161680 SystemInfo - Graphics API (type): Direct3D11
+I 00:04:13.4161680 SystemInfo - Graphics Supported Render Target Count: 8
+I 00:04:13.4161680 SystemInfo - Graphics Supports 3D Textures: True
+I 00:04:13.4161680 SystemInfo - Graphics Supports Compute Shaders: True
+I 00:04:13.4161680 SystemInfo - Graphics Supports Shadows: True
+I 00:04:13.4161680 SystemInfo - Graphics Supports Sparse Textures: True
+I 00:04:13.4161680 SystemInfo - Graphics RenderTextureFormat.ARGBHalf: True
+I 00:04:13.4161680 SystemInfo - Graphics Metal Support: False
+I 00:04:26.2215645 [Startup] Startup stage Start
+I 00:04:26.2215645 [Downloader] *** Loading DBF
+E 00:04:28.1511814 GAME_SAVE_SUBKEY DBF Asset has 0 records! Something went wrong generating it. Try checking the generated XMLs in the DBF folder.
+E 00:04:28.1511814 GLOBAL DBF Asset has 0 records! Something went wrong generating it. Try checking the generated XMLs in the DBF folder.
+I 00:04:28.6800767 *** BattleNet version: Product = 35.2.0.0, Data = 35200
+I 00:04:28.9470239 [Login] Beginning processing login challenges
+I 00:04:28.9470239 [Startup] Startup stage ConnectingToBattlenet
+I 00:04:28.9470239 CPU Benchmark Result (Average Frame Time): 43ms
+I 00:04:28.9780178 GPU Benchmark Result (Average Frame Time): 17ms
+I 00:04:57.5965255 [Login] We are now logged in, stopping processing challenges
+I 00:04:57.5965255 Region: EU
+I 00:04:57.5965255 Braze is supported  for this build: False
+I 00:04:57.5965255 [Startup] Startup stage ConnectingToHearthstone
+W 00:04:58.9102791 Attempting to get decks from CollectionManager, even though NetCacheDecks is not ready (meaning it's waiting for the decks to be updated)!
+W 00:04:58.9102791 Attempting to get decks from CollectionManager, even though NetCacheDecks is not ready (meaning it's waiting for the decks to be updated)!
+W 00:05:00.2380304 Attempting to get decks from CollectionManager, even though NetCacheDecks is not ready (meaning it's waiting for the decks to be updated)!
+W 00:05:00.2380304 Attempting to get decks from CollectionManager, even though NetCacheDecks is not ready (meaning it's waiting for the decks to be updated)!
+I 00:05:00.2380304 [Startup] Startup stage LaunchGame
+I 00:05:00.2380304 RegisterScreenBox tempGuardianVars=NetCache+NetCacheFeatures
+I 00:05:00.7809288 [HealthyGaming] CAIS ServerEnabledForPlatform=False AccountCAISForChina=False Country=PRT TimeSec=50.85464 PlayedTimeMin=0 RestedTimeMin=0 SessionStartTime=1776207897000
+I 00:05:06.9408953 [Login] Initial download done, Waiting Intro popup...
+I 00:05:08.2582002 [LuckyDraw] LuckyDrawManager status: Received instruction to initialize or update. Starting now.
+I 00:05:08.2582002 [LuckyDraw] LuckyDrawManager status: Waiting for store to initialize...
+I 00:05:09.3159865 [LuckyDraw] LuckyDrawManager status: Requested lucky draw data from Hearthstone server. Waiting for a response...
+I 00:05:09.5323441 [LuckyDraw] LuckyDrawManager status: Processing lucky draws received from the server. Creating data models etc.
+I 00:05:09.5323441 [LuckyDraw] Lucky Draw Box 74 status: Initializing. Creating lucky draw box state from Hearthstone server response.
+I 00:05:09.5323441 [LuckyDraw] Lucky Draw Box 74 status: Deathling is fully initialised.
+I 00:05:09.5323441 [LuckyDraw] LuckyDrawManager status: DFT system is fully initialized and ready!
+I 00:05:14.8464411 [GameNetLogger] GameMgr.ChangeFindGameState() - state: CLIENT_STARTED, previous state: INVALID
+I 00:05:15.8177828 [GameNetLogger] GameMgr.ChangeFindGameState() - state: BNET_QUEUE_DELAYED, previous state: CLIENT_STARTED
+I 00:05:16.3084444 [GameNetLogger] GameMgr.ChangeFindGameState() - state: CLIENT_CANCELED, previous state: BNET_QUEUE_DELAYED
+I 00:05:18.9338302 [GameNetLogger] GameMgr.ChangeFindGameState() - state: BNET_QUEUE_CANCELED, previous state: CLIENT_CANCELED
+I 00:05:18.9338302 [GameNetLogger] GameMgr.ChangeFindGameState() - state: INVALID, previous state: BNET_QUEUE_CANCELED
+I 00:05:19.1510971 [GameNetLogger] GameMgr.ChangeFindGameState() - state: CLIENT_STARTED, previous state: INVALID
+I 00:05:19.3713650 [GameNetLogger] GameMgr.ChangeFindGameState() - state: BNET_QUEUE_DELAYED, previous state: CLIENT_STARTED
+I 00:05:23.4840857 [GameNetLogger] GameMgr.ChangeFindGameState() - state: SERVER_GAME_CONNECTING, previous state: BNET_QUEUE_DELAYED
+I 00:05:23.4840857 [GameNetLogger] Network.GotoGameServe() - gameConnectionDisconnected True, IsRestoringGameState: False
+I 00:05:23.4840857 [GameNetLogger] Network.GotoGameServe() - address= 37.244.26.98:1119, game=472, client=89508208, spectateKey=dkiEgn reconnecting=False
+I 00:05:23.4840857 TcpConnection - possible ip address: 37.244.26.98
+I 00:05:34.7713961 [GameNetLogger] Network.OnGameServerConnectEvent() - Connected to game server with error code ERROR_OK
+I 00:05:34.7713961 [GameNetLogger] Network.OnGameServerConnectEvent() - Connected to game server with socket error: Success, Message: Client: Connected
+I 00:05:34.7713961 [GameNetLogger] Network.SendGameServerHandshake()
+I 00:05:39.0825030 [GameNetLogger] GameMgr.OnGameSetup()
+I 00:05:39.0825030 [GameNetLogger] GameMgr.ChangeFindGameState() - state: SERVER_GAME_STARTED, previous state: SERVER_GAME_CONNECTING
+I 00:05:39.0825030 SERVER_GAME_STARTED event - Loading Gameplay Scene
+I 00:05:39.0825030 [GameNetLogger] GameMgr.ChangeFindGameState() - state: INVALID, previous state: SERVER_GAME_STARTED
+I 00:05:39.2135904 Gameplay.Awake() - CurrentMode=GAMEPLAY, PrevMode=BACON
+W 00:05:40.0391404 CardBackManager SetDeckCardBack(): cardBack is null!
+W 00:05:40.9857536 BaconTrinketWidget.UpdatePortrait() - Missing portrait Mat
+W 00:05:40.9857536 BaconTrinketWidget.UpdatePortrait() - Missing portrait Mat
+W 00:06:08.0877824 BaconTrinketWidget.UpdatePortrait() - Missing portrait Mat
+W 00:06:08.0877824 BaconTrinketWidget.UpdatePortrait() - Missing portrait Mat
+W 00:06:47.7763018 BaconTrinketWidget.UpdatePortrait() - Missing portrait Mat
+W 00:06:47.7763018 BaconTrinketWidget.UpdatePortrait() - Missing portrait Mat
+I 00:07:24.1615507 [GameNetLogger] Network.DisconnectFromGameServer() - Reason: DisconnectAfterFailedPings 
+I 00:07:24.1615507 [GameNetLogger] Network.OnGameServerDisconnectEvent() - Disconnected from game server with BNet error: ERROR_OK socket error: Success, Message: 
+I 00:07:24.1885526 [GameNetLogger] GameMgr.ChangeFindGameState() - state: CLIENT_STARTED, previous state: INVALID
+I 00:07:24.1885526 [GameNetLogger] GameMgr.ChangeFindGameState() - state: SERVER_GAME_CONNECTING, previous state: CLIENT_STARTED
+I 00:07:24.1885526 [GameNetLogger] Network.GotoGameServe() - gameConnectionDisconnected True, IsRestoringGameState: False
+I 00:07:24.1885526 [GameNetLogger] Network.GotoGameServe() - address= 37.244.26.98:1119, game=472, client=89508208, spectateKey=dkiEgn reconnecting=True
+I 00:07:24.1885526 TcpConnection - possible ip address: 37.244.26.98
+I 00:07:24.1885526 Hiding notification HelpTooltip_Tutorial because something else is being shown.
+I 00:07:24.1885526 Hiding notification BaconTechLevelRibbon(Clone) because something else is being shown.
+I 00:07:29.3239008 [GameNetLogger] Trying to send a packet while disconnected. ID 15 , PegasusGame.UserUI
+E 00:07:29.3239008 [GameNetLogger] RpcController.SendData() - Not connected
+I 00:07:31.4540404 [GameNetLogger] Network.OnGameServerConnectEvent() - Connected to game server with error code ERROR_OK
+I 00:07:31.4540404 [GameNetLogger] Network.OnGameServerConnectEvent() - Connected to game server with socket error: Success, Message: Client: Connected
+I 00:07:31.4540404 [GameNetLogger] Network.SendGameServerHandshake()
+I 00:07:31.6370523 [GameNetLogger] GameMgr.OnGameSetup()
+I 00:07:31.6370523 [GameNetLogger] GameMgr.ChangeFindGameState() - state: SERVER_GAME_STARTED, previous state: SERVER_GAME_CONNECTING
+I 00:07:31.6370523 SERVER_GAME_STARTED event - Reloading Gameplay Scene
+I 00:07:31.6370523 [GameNetLogger] GameMgr.ChangeFindGameState() - state: INVALID, previous state: SERVER_GAME_STARTED
+I 00:07:31.7300583 Gameplay.Awake() - CurrentMode=GAMEPLAY, PrevMode=GAMEPLAY
+I 00:07:32.2370911 Hiding notification BaconTechLevelRibbon(Clone) because something else is being shown.
+W 00:07:32.2370911 BaconTrinketWidget.UpdatePortrait() - Missing portrait Mat
+W 00:07:32.2370911 BaconTrinketWidget.UpdatePortrait() - Missing portrait Mat

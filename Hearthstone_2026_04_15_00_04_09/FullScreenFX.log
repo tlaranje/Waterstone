@@ -1,0 +1,3 @@
+D 00:07:31.6540534 StopAllEffects
+D 00:07:31.6540534 StopAllEffectsCoroutine stopping effects now
+W 00:07:34.4322314 Attempted to release a fullscreen effect that was not added!

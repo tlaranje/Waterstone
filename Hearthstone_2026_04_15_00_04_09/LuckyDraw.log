@@ -1,0 +1,7 @@
+I 00:05:08.2582002 LuckyDrawManager status: Received instruction to initialize or update. Starting now.
+I 00:05:08.2582002 LuckyDrawManager status: Waiting for store to initialize...
+I 00:05:09.3159865 LuckyDrawManager status: Requested lucky draw data from Hearthstone server. Waiting for a response...
+I 00:05:09.5323441 LuckyDrawManager status: Processing lucky draws received from the server. Creating data models etc.
+I 00:05:09.5323441 Lucky Draw Box 74 status: Initializing. Creating lucky draw box state from Hearthstone server response.
+I 00:05:09.5323441 Lucky Draw Box 74 status: Deathling is fully initialised.
+I 00:05:09.5323441 LuckyDrawManager status: DFT system is fully initialized and ready!
