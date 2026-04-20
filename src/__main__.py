@@ -1,7 +1,7 @@
 import sys
 import requests
 from PyQt5.QtWidgets import (
-    QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget
+    QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton
 )
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QGuiApplication
@@ -22,6 +22,9 @@ class HearthstoneOverlay(QMainWindow):
             card['name']: card['id'] for card in self.cards_data
         }
         self.setup_ui()
+
+    def on_click(self):
+        print('PyQt5 button click')
 
     def load_current_season_data(self):
         """Downloads and filters cards active in the current BG season."""
@@ -57,6 +60,13 @@ class HearthstoneOverlay(QMainWindow):
 
     def setup_ui(self):
         """Initializes the user interface."""
+
+        button = QPushButton('PyQt5 button', self)
+        button.setToolTip('This is an example button')
+        button.move(100, 70)
+        button.clicked.connect(self.on_click)
+        self.show()
+
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
         self.layout = QVBoxLayout(self.central_widget)
