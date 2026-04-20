@@ -1,10 +1,10 @@
 import sys
 import requests
-from PyQt6.QtWidgets import (
+from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget
 )
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPixmap, QGuiApplication
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap, QGuiApplication
 
 
 class HearthstoneOverlay(QMainWindow):
@@ -21,7 +21,6 @@ class HearthstoneOverlay(QMainWindow):
         self.card_dict = {
             card['name']: card['id'] for card in self.cards_data
         }
-        print(self.card_dict)
         self.setup_ui()
 
     def load_current_season_data(self):
