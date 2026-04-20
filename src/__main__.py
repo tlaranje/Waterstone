@@ -1,16 +1,18 @@
 import sys
 import requests
 from PyQt5.QtWidgets import (
-    QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton
+    QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton,
+    QHBoxLayout
 )
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QGuiApplication
 
 
 class HearthstoneOverlay(QMainWindow):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.cards_data = []
+        self.screen_size: tuple[float, float] = (0, 0)
+        self.cards_data: list = []
         self.card_dict = {}
         self.card_display = None
 
@@ -56,31 +58,47 @@ class HearthstoneOverlay(QMainWindow):
             Qt.WindowType.WindowStaysOnTopHint
         )
         screen = QGuiApplication.primaryScreen().geometry()
+        self.screen_size = (screen.width(), screen.height())
         self.setFixedSize(screen.width(), screen.height())
 
     def setup_ui(self):
-        """Initializes the user interface."""
-
-        button = QPushButton('PyQt5 button', self)
-        button.setToolTip('This is an example button')
-        button.move(100, 70)
-        button.clicked.connect(self.on_click)
-        self.show()
-
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
-        self.layout = QVBoxLayout(self.central_widget)
+        # Layout Principal Horizontal (Barra Lateral | Área de Conteúdo)
+        self.main_layout = QHBoxLayout(self.central_widget)
+
+        # Painel de Botões
+        self.button_panel = QVBoxLayout()
+        self.central_widget.setMaximumWidth(self.screen_size[0])
+
+        btms = []
+        btms.append(QPushButton("Atualizar Pool"))
+        btms.append(QPushButton("Ver Stats"))
+
+        # Estilização básica para não ficar feio
+        for b in btms:
+            b.setStyleSheet("""
+                QPushButton {
+                    background-color: #3d2b1f;
+                    color: #f0d4a0;
+                    border: 2px solid #8e6d3d;
+                    border-radius: 4px;
+                    font-family: 'Arial';
+                    font-size: 14px;
+                }
+                QPushButton:hover {
+                    background-color: #5a4030;
+                    border-color: #d4af37;
+                }
+            """)
+            self.button_panel.addWidget(b, alignment=Qt.AlignRight)
+        self.button_panel.addStretch()
+
+        # Adiciona o painel e o display de cards ao layout principal
+        self.main_layout.addLayout(self.button_panel)
 
         self.card_display = QLabel()
-        self.layout.addWidget(self.card_display)
-
-        # Example: Show a card that is iconic in the current pool
-        # If the card isn't found, it won't crash
-        example_card = "Titus Rivendare"
-        card_id = self.card_dict.get(example_card)
-
-        if card_id:
-            self.display_card_art(card_id)
+        self.main_layout.addWidget(self.card_display)
 
     def display_card_art(self, card_id):
         """Fetches card art from HearthstoneJSON Art API."""
