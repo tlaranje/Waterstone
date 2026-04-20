@@ -1,0 +1,25 @@
+{
+  "name": "waterstone",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tlaranje/Waterstone.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/tlaranje/Waterstone/issues"
+  },
+  "homepage": "https://github.com/tlaranje/Waterstone#readme",
+  "devDependencies": {
+    "electron": "^41.2.1"
+  }
+}

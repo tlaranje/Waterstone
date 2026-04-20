@@ -1,48 +1,41 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: tlaranje <tlaranje@student.42porto.com>    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2026/03/20 14:50:51 by tlaranje          #+#    #+#              #
-#    Updated: 2026/03/24 12:19:35 by tlaranje         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
 
 # === COMMANDS ===
-RM		:= rm -rf
-FIND	:= find
+RM      := rm -rf
+NPM     := npm
 
 # === BUILD TARGETS ===
+
+# Instala as dependências do package.json
 install:
-	@clear && uv sync
+	@clear && $(NPM) install
 
+# Inicia a aplicação Electron
 run:
-	@clear && uv run python -m src
+	@clear && $(NPM) start
 
+# Limpa caches comuns de ferramentas de lint e build do Node
 clean:
 	@clear
 	@echo "Cleaning project cache..."
-	@$(FIND) . -type d -name "__pycache__" -exec $(RM) {} +
-	@$(FIND) . -type d -name ".mypy_cache" -exec $(RM) {} +
-	@$(FIND) . -type d -name ".pytest_cache" -exec $(RM) {} +
-	@$(FIND) . -type f -name "*.pyc" -delete
-	@$(FIND) . -type f -name "*.pyo" -delete
+	@$(RM) .eslintcache
+	@$(RM) dist/
+	@$(RM) out/
 
+# Remove completamente as dependências (equivalente ao fclean da 42)
 fclean: clean
-	@$(RM) .venv
+	@echo "Removing node_modules..."
+	@$(RM) node_modules
+	@$(RM) package-lock.json
 
+# Reinstala tudo do zero
+re: fclean install
+
+# Roda o Linter (Assumindo que você instalou ESLint)
 lint:
-	@clear && uv run flake8 .
-	@uv run mypy . --warn-return-any \
-		--warn-unused-ignores \
-	    --ignore-missing-imports \
-	    --disallow-untyped-defs \
-	    --check-untyped-defs
+	@clear && $(NPM) run lint
 
-lint-strict:
-	@clear && uv run flake8 .
-	@uv run mypy . --strict
+# Atalho para build (empacotar o app para executável)
+build:
+	@clear && $(NPM) run build
 
-.PHONY: install run clean lint lint-strict
+.PHONY: install run clean fclean re lint build
