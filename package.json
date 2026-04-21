@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/tlaranje/Waterstone#readme",
   "devDependencies": {
-    "electron": "^41.2.1"
+    "electron": "^41.2.1",
+    "electron-reload": "^2.0.0-alpha.1"
   }
 }
