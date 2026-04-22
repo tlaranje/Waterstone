@@ -1,36 +1,48 @@
-function create_button(
-    text='Hello World!',
-    top_pos='0px',
-    right_pos='0px',
-    font_size='13px',
-    padding='1mm 1mm'
-) {
-    const btn = document.createElement('button');
-    btn.className = 'button';
-    btn.innerText = text;
+const { ipcRenderer } = require('electron');
 
-    btn.style.position = 'absolute';
-    btn.style.top = top_pos;
-    btn.style.right = right_pos;
-    btn.style.fontSize = font_size;
-    btn.style.padding = padding;
+const container = document.getElementById('main-container');
+const buttons = []; // store button metadata for hit-testing
 
-    btn.style.pointerEvents = 'auto';
+// ─── mousemove fires even with setIgnoreMouseEvents + forward:true ──────────
+// Use it to detect if cursor is over a button and reposition hit window
+document.addEventListener('mousemove', (e) => {
+  const el = document.elementFromPoint(e.clientX, e.clientY);
 
-    btn.addEventListener('mouseenter', () => {
-        ipcRenderer.send('set-ignore-mouse', false);
+  if (el && el.dataset.buttonId) {
+    const rect = el.getBoundingClientRect();
+    ipcRenderer.send('mouse-over-button', {
+      x: Math.round(rect.left),
+      y: Math.round(rect.top),
+      width: Math.round(rect.width),
+      height: Math.round(rect.height),
+      id: el.dataset.buttonId
     });
+  } else {
+    ipcRenderer.send('mouse-over-none');
+  }
+});
 
-    btn.addEventListener('mouseleave', () => {
-        ipcRenderer.send('set-ignore-mouse', true);
-    });
+// ─── Receive click from hit window via main ─────────────────────────────────
+ipcRenderer.on('button-clicked', (event, id) => {
+  const btn = document.querySelector(`[data-button-id="${id}"]`);
+  if (btn) {
+    btn.style.backgroundColor = btn.style.backgroundColor === 'red' ? 'white' : 'red';
+  }
+});
 
-    btn.onclick = () => {
-        console.log("Botão clicado com sucesso!");
-        btn.style.backgroundColor = 'red';
-    };
+// ─── Button factory ─────────────────────────────────────────────────────────
+function create_button(id, text = 'Hello World!', top = 0, right = 0) {
+  const btn = document.createElement('button');
+  btn.innerText = text;
+  btn.dataset.buttonId = id; // used for hit-testing in mousemove
 
-    container.appendChild(btn);
+  btn.style.position = 'absolute';
+  btn.style.top      = top + 'px';
+  btn.style.right    = right + 'px';
+
+  container.appendChild(btn);
+  return btn;
 }
 
-create_button();
+// ─── Init ───────────────────────────────────────────────────────────────────
+create_button('btn-1', 'Hello World!', 10, 10);

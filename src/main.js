@@ -1,11 +1,5 @@
 const path = require('path');
-const {
-  app,
-  BrowserWindow,
-  globalShortcut,
-  screen,
-  ipcMain
-} = require('electron');
+const { app, BrowserWindow, globalShortcut, screen, ipcMain } = require('electron');
 
 try {
   require('electron-reload')(__dirname, {
@@ -13,20 +7,22 @@ try {
     hardResetMethod: 'exit'
   });
 } catch (err) {
-  console.log("Electron reload não pôde ser iniciado");
+  console.log('electron-reload could not be started');
 }
 
-let win;
+let overlayWin;
+let hitWin;
 
-const createWindow = () => {
+const createWindows = () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
-  win = new BrowserWindow({
-    width: width,
-    height: height,
+  // ─── Overlay window (visual only, always ignores mouse) ────────────────────
+  overlayWin = new BrowserWindow({
+    width, height,
     transparent: true,
     frame: false,
     alwaysOnTop: true,
+    skipTaskbar: true,
     focusable: false,
     webPreferences: {
       nodeIntegration: true,
@@ -34,43 +30,65 @@ const createWindow = () => {
     }
   });
 
-  win.loadFile('src/index.html');
-  win.setIgnoreMouseEvents(true, { forward: true });
+  overlayWin.loadFile('src/index.html');
+  overlayWin.setIgnoreMouseEvents(true, { forward: true });
 
-  const ret1 = globalShortcut.register('ctrl+one', () => {
-
+  // ─── Hit window (invisible, 1x1 by default, expands over buttons) ──────────
+  hitWin = new BrowserWindow({
+    width: 1,
+    height: 1,
+    x: -100,
+    y: -100,
+    transparent: true,
+    frame: false,
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    focusable: true,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
   });
-  if (win.isVisible()) {
-    win.hide();
-  } else {
-    win.show();
-  }
-  const ret = globalShortcut.register('ESC', () => {
-    app.quit()
+
+  hitWin.loadFile('src/hit.html');
+  hitWin.setIgnoreMouseEvents(false);
+  hitWin.on('blur', () => hitWin.setAlwaysOnTop(true, 'screen-saver'));
+
+  // ─── Shortcuts ─────────────────────────────────────────────────────────────
+  globalShortcut.register('ctrl+1', () => {
+    if (overlayWin.isVisible()) {
+      overlayWin.hide();
+      hitWin.setBounds({ x: -100, y: -100, width: 1, height: 1 });
+    } else {
+      overlayWin.show();
+    }
   });
 
-  if (!ret) {
-    console.log('Falha no registro do atalho');
-  }
+  globalShortcut.register('ESC', () => app.quit());
 };
 
-ipcMain.on('set-ignore-mouse', (event, ignore) => {
-  const targetWin = BrowserWindow.fromWebContents(event.sender);
-  if (targetWin) {
-    // Adicione um log para conferir se o comando está chegando
-    // console.log("Ignorar mouse:", ignore);
-    targetWin.setIgnoreMouseEvents(ignore, { forward: true });
-  }
+// ─── IPC: Mouse is over a button → expand hit window over it ───────────────
+ipcMain.on('mouse-over-button', (event, bounds) => {
+  hitWin.setBounds({
+    x: Math.round(bounds.x),
+    y: Math.round(bounds.y),
+    width: Math.round(bounds.width),
+    height: Math.round(bounds.height)
+  });
 });
 
-app.whenReady().then(createWindow);
-
-app.on('will-quit', () => {
-  globalShortcut.unregisterAll();
+// ─── IPC: Mouse left all buttons → shrink hit window away ──────────────────
+ipcMain.on('mouse-over-none', () => {
+  hitWin.setBounds({ x: -100, y: -100, width: 1, height: 1 });
 });
 
+// ─── IPC: Forward click from hit window to overlay ─────────────────────────
+ipcMain.on('button-clicked', (event, id) => {
+  overlayWin.webContents.send('button-clicked', id);
+});
+
+app.whenReady().then(createWindows);
+app.on('will-quit', () => globalShortcut.unregisterAll());
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+  if (process.platform !== 'darwin') app.quit();
 });
