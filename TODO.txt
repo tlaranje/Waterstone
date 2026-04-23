@@ -1,8 +1,0 @@
-https://github.com/ocornut/imgui
-https://pthom.github.io/imgui_manual_online/
-https://www.glfw.org/docs/latest/
-https://www.google.com/search?q=https://www.youtube.com/user/TheCherno
-https://www.youtube.com/@VictorGordan
-https://www.google.com/search?q=https://www.youtube.com/%40Lambertino
-https://learnopengl.com/
-https://github.com/ocornut/imgui/wiki

@@ -1,41 +1,36 @@
+RM		:= rm -rf
+FIND	:= find
 
-# === COMMANDS ===
-RM      := rm -rf
-NPM     := npm
-
-# === BUILD TARGETS ===
-
-# Instala as dependências do package.json
 install:
-	@clear && $(NPM) install
+	@clear && uv sync
 
-# Inicia a aplicação Electron
 run:
-	@clear && $(NPM) start
+	@clear && uv run python -m src $(ARGS)
 
-# Limpa caches comuns de ferramentas de lint e build do Node
+debug:
+	@clear && uv run python -m pdb -m src
+
 clean:
 	@clear
 	@echo "Cleaning project cache..."
-	@$(RM) .eslintcache
-	@$(RM) dist/
-	@$(RM) out/
+	@$(FIND) . -type d -name "__pycache__" -exec $(RM) {} +
+	@$(FIND) . -type d -name ".mypy_cache" -exec $(RM) {} +
+	@$(FIND) . -type d -name ".pytest_cache" -exec $(RM) {} +
+	@$(FIND) . -type f -name "*.pyc" -delete
+	@$(FIND) . -type f -name "*.pyo" -delete
+	@$(RM) .venv
 
-# Remove completamente as dependências (equivalente ao fclean da 42)
-fclean: clean
-	@echo "Removing node_modules..."
-	@$(RM) node_modules
-	@$(RM) package-lock.json
 
-# Reinstala tudo do zero
-re: fclean install
-
-# Roda o Linter (Assumindo que você instalou ESLint)
 lint:
-	@clear && $(NPM) run lint
+	@clear && uv run flake8 .
+	@uv run mypy . --warn-return-any \
+		--warn-unused-ignores \
+	    --ignore-missing-imports \
+	    --disallow-untyped-defs \
+	    --check-untyped-defs
 
-# Atalho para build (empacotar o app para executável)
-build:
-	@clear && $(NPM) run build
+lint-strict:
+	@clear && uv run flake8 .
+	@uv run mypy . --strict
 
-.PHONY: install run clean fclean re lint build
+.PHONY: install run debug clean lint lint-strict

@@ -1,0 +1,20 @@
+[project]
+name = "waterstone"
+version = "0.0.1"
+description = "Projeto UI com Dear PyGui"
+readme = "README.md"
+requires-python = ">=3.12, <3.14"
+dependencies = [
+    "flake8>=7.1.1",
+    "mypy>=1.11.2",
+    "pydantic>=2.8.2",
+    "rich>=13.8.1",
+    "dearpygui>=1.11.1",
+    "screeninfo>=0.8.1"
+]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+exclude = [".venv"]
