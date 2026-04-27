@@ -1,14 +1,21 @@
-RM		:= rm -rf
-FIND	:= find
+RM      := rm -rf
+FIND    := find
+
+LOCAL_LIBS := $(shell pwd)/libs
+
+export LD_LIBRARY_PATH := $(LOCAL_LIBS):$(LD_LIBRARY_PATH)
 
 install:
 	@clear && uv sync
 
 run:
-	@clear && uv run python -m src $(ARGS)
+	@clear
+	@# Rodamos o uv run com o ambiente de bibliotecas configurado
+	@uv run python -m src $(ARGS)
 
 debug:
-	@clear && uv run python -m pdb -m src
+	@clear
+	@uv run python -m pdb -m src
 
 clean:
 	@clear
@@ -20,14 +27,13 @@ clean:
 	@$(FIND) . -type f -name "*.pyo" -delete
 	@$(RM) .venv
 
-
 lint:
 	@clear && uv run flake8 .
 	@uv run mypy . --warn-return-any \
 		--warn-unused-ignores \
-	    --ignore-missing-imports \
-	    --disallow-untyped-defs \
-	    --check-untyped-defs
+		--ignore-missing-imports \
+		--disallow-untyped-defs \
+		--check-untyped-defs
 
 lint-strict:
 	@clear && uv run flake8 .

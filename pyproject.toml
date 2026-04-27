@@ -9,8 +9,9 @@ dependencies = [
     "mypy>=1.11.2",
     "pydantic>=2.8.2",
     "rich>=13.8.1",
-    "dearpygui>=1.11.1",
-    "screeninfo>=0.8.1"
+    "PySide6>=6.11.0",
+    "screeninfo>=0.8.1",
+    "pynput>=1.8.1"
 ]
 
 [tool.mypy]

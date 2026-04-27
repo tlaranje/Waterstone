@@ -1,63 +1,24 @@
-import dearpygui.dearpygui as dpg
-from screeninfo import get_monitors
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from screeninfo import Monitor
+import sys
+from PySide6.QtGui import QGuiApplication
+from PySide6.QtQml import QQmlApplicationEngine
+from pynput import keyboard
 
 
-class UI:
-    def __init__(self, monitor: "Monitor") -> None:
-        self.monitor: "Monitor" = monitor
-        self.btm_width: int = 50
-        self.btm_height: int = 50
-        self.offset: int = 0
-
-    def setup(self) -> None:
-        btm_x = self.monitor.width - self.btm_width - self.offset
-        btm_y = self.offset
-        dpg.add_button(
-            label="Sair",
-            width=self.btm_width,
-            height=self.btm_height,
-            pos=[btm_x, btm_y]
-        )
-
-
-class App:
-    def key_press_handler(self, sender: str, app_data: str) -> None:
-        if app_data == dpg.mvKey_Escape:
-            dpg.stop_dearpygui()
-
-    def create_window(self) -> None:
-        monitor = get_monitors()[0]
-        ui = UI(monitor)
-
-        dpg.create_context()
-
-        dpg.create_viewport(
-            title='WaterStone',
-            width=monitor.width,
-            height=monitor.height,
-            decorated=False
-        )
-
-        with dpg.handler_registry():
-            dpg.add_key_press_handler(callback=self.key_press_handler)
-
-        with dpg.window(tag="Win"):
-            ui.setup()
-
-        dpg.setup_dearpygui()
-        dpg.show_viewport()
-        dpg.set_primary_window("Win", True)
-
-        while dpg.is_dearpygui_running():
-            dpg.render_dearpygui_frame()
-
-        dpg.destroy_context()
+def on_press(key: str) -> None:
+    if key == keyboard.Key.esc:
+        print("Esc pressionado globalmente! Saindo...")
+        QGuiApplication.quit()
 
 
 if __name__ == "__main__":
-    app = App()
-    app.create_window()
+    listener = keyboard.Listener(on_press=on_press)
+    listener.start()
+    app = QGuiApplication(sys.argv)
+    engine = QQmlApplicationEngine()
+    engine.addImportPath(sys.path[0] + "/src")
+    engine.loadFromModule("App", "Main")
+    if not engine.rootObjects():
+        sys.exit(-1)
+    exit_code = app.exec()
+    del engine
+    sys.exit(exit_code)
