@@ -1,0 +1,23 @@
+GIMP Palette
+Name: Estrelas Douradas
+Columns: 4
+#
+# Paleta extraída das cores das estrelas douradas
+# Gerada por Claude a partir da imagem das estrelas
+#
+251 232 123	Dourado Claro    #FBE87B
+240 219 118	Dourado          #F0DB76
+224 202 110	Dourado Médio    #E0CA6E
+209 187 100	Dourado Escuro   #D1BB64
+197 172 102	Âmbar Claro      #C5AC66
+192 170  76	Âmbar            #C0AA4C
+182 156  92	Âmbar Médio      #B69C5C
+178 155  62	Âmbar Escuro     #B29B3E
+171 144  78	Ouro Antigo      #AB904E
+161 138  68	Ouro Médio       #A18A44
+157 129  72	Ouro Escuro      #9D8148
+147 124  60	Bronze Claro     #937C3C
+143 114  62	Bronze           #8F723E
+133 110  50	Bronze Médio     #856E32
+129 102  49	Bronze Escuro    #816631
+126  93  53	Castanho Dourado #7E5D35

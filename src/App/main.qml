@@ -22,7 +22,7 @@ Window {
             implicitHeight: 50
 
             contentItem: Image {
-                source: "../../img/Card_Menu.svg"
+                source: "../../img/drawing.svg"
 
                 sourceSize.width: 64
                 sourceSize.height: 64
