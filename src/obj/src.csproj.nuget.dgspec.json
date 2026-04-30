@@ -1,0 +1,88 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/tlaranje/Documents/Waterstone/src/src.csproj": {}
+  },
+  "projects": {
+    "/home/tlaranje/Documents/Waterstone/src/src.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/tlaranje/Documents/Waterstone/src/src.csproj",
+        "projectName": "src",
+        "projectPath": "/home/tlaranje/Documents/Waterstone/src/src.csproj",
+        "packagesPath": "/home/tlaranje/sgoinfre/hs_overlay/.nuget",
+        "outputPath": "/home/tlaranje/Documents/Waterstone/src/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/tlaranje/sgoinfre/hs_overlay/.dotnet_home/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Avalonia": {
+              "target": "Package",
+              "version": "[12.0.2, )"
+            },
+            "Avalonia.Desktop": {
+              "target": "Package",
+              "version": "[12.0.2, )"
+            },
+            "Avalonia.Fonts.Inter": {
+              "target": "Package",
+              "version": "[12.0.2, )"
+            },
+            "Avalonia.Themes.Fluent": {
+              "target": "Package",
+              "version": "[12.0.2, )"
+            },
+            "AvaloniaUI.DiagnosticsSupport": {
+              "target": "Package",
+              "version": "[2.2.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/sgoinfre/tlaranje/hs_overlay/.dotnet/sdk/8.0.420/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

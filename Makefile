@@ -1,42 +1,28 @@
-RM      := rm -rf
-FIND    := find
+DOTNET := $(shell command -v dotnet 2> /dev/null)
+PROJ_NAME := src/src.csproj
 
-LOCAL_LIBS := $(shell pwd)/libs
-
-export LD_LIBRARY_PATH := $(LOCAL_LIBS):$(LD_LIBRARY_PATH)
+all: install build
 
 install:
-	@clear && uv sync
+	@clear
+	@if [ -z "$(DOTNET)" ]; then \
+		echo "Instalando .NET SDK em $(DOTNET_ROOT)..."; \
+		curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --install-dir $(DOTNET_ROOT) --channel 8.0; \
+	else \
+		echo ".NET já está disponível via .envrc"; \
+	fi
+	@dotnet new install Avalonia.Templates --force
+
+build:
+	@dotnet build $(PROJ_NAME)
 
 run:
 	@clear
-	@# Rodamos o uv run com o ambiente de bibliotecas configurado
-	@uv run python -m src $(ARGS)
-
-debug:
-	@clear
-	@uv run python -m pdb -m src
+	@dotnet run --project $(PROJ_NAME) $(ARGS)
 
 clean:
 	@clear
-	@echo "Cleaning project cache..."
-	@$(FIND) . -type d -name "__pycache__" -exec $(RM) {} +
-	@$(FIND) . -type d -name ".mypy_cache" -exec $(RM) {} +
-	@$(FIND) . -type d -name ".pytest_cache" -exec $(RM) {} +
-	@$(FIND) . -type f -name "*.pyc" -delete
-	@$(FIND) . -type f -name "*.pyo" -delete
-	@$(RM) .venv
+	@echo "Cleaning .NET artifacts..."
+	@rm -rf **/bin **/obj .templateengine
 
-lint:
-	@clear && uv run flake8 .
-	@uv run mypy . --warn-return-any \
-		--warn-unused-ignores \
-		--ignore-missing-imports \
-		--disallow-untyped-defs \
-		--check-untyped-defs
-
-lint-strict:
-	@clear && uv run flake8 .
-	@uv run mypy . --strict
-
-.PHONY: install run debug clean lint lint-strict
+.PHONY: all install build run clean
