@@ -32,7 +32,7 @@ install-scripts/main/src/dotnet-install.sh \
 			-o /tmp/dotnet-install.sh; \
 		chmod +x /tmp/dotnet-install.sh; \
 		/tmp/dotnet-install.sh \
-			--install-dir "$(DOTNET_ROOT)" --channel 9.0; \
+			--install-dir "$(DOTNET_ROOT)" --channel 8.0; \
 	fi
 
 build:
