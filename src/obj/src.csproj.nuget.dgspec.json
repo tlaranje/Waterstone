@@ -10,11 +10,11 @@
         "projectUniqueName": "/home/tlaranje/Documents/Waterstone/src/src.csproj",
         "projectName": "src",
         "projectPath": "/home/tlaranje/Documents/Waterstone/src/src.csproj",
-        "packagesPath": "/home/tlaranje/sgoinfre/hs_overlay/.nuget",
+        "packagesPath": "/home/tlaranje/.nuget/packages/",
         "outputPath": "/home/tlaranje/Documents/Waterstone/src/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/tlaranje/sgoinfre/hs_overlay/.dotnet_home/.nuget/NuGet/NuGet.Config"
+          "/home/tlaranje/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -37,7 +37,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -75,12 +76,26 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.26, 8.0.26]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.linux-x64",
+              "version": "[8.0.26, 8.0.26]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.26, 8.0.26]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/sgoinfre/tlaranje/hs_overlay/.dotnet/sdk/8.0.420/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/home/tlaranje/Documents/Waterstone/.local/.dotnet/sdk/9.0.313/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -1,66 +1,51 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: tlaranje <tlaranje@student.42porto.com>    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2026/02/26 12:06:51 by tlaranje          #+#    #+#              #
-#    Updated: 2026/04/06 10:40:48 by tlaranje         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
-# === VARIABLES ===
 RM        := rm -rf
-DOTNET    := $(shell command -v dotnet 2>/dev/null)
 PROJ_NAME := src/src.csproj
 
-# === DIRENV SETUP ===
-DIRENV_BIN := $(HOME)/.local/bin/direnv
+SGOINFRE  := $(shell [ -d "$(HOME)/sgoinfre" ] \
+	&& echo "$(HOME)/sgoinfre/hs_overlay" \
+	|| echo "$(CURDIR)/.local")
 
-define INSTALL_DIRENV
-	@if ! command -v direnv >/dev/null 2>&1 && [ ! -x "$(DIRENV_BIN)" ]; then \
-		echo "Installing direnv..."; \
-		curl -sfL https://direnv.net/install.sh | bash; \
-		export PATH="$(HOME)/.local/bin:$$PATH"; \
-	else \
-		echo "direnv already installed."; \
-	fi; \
-	direnv allow >/dev/null 2>&1 || true
-endef
+DOTNET_ROOT     := $(SGOINFRE)/.dotnet
+NUGET_PACKAGES  := $(SGOINFRE)/.nuget
+DOTNET_CLI_HOME := $(SGOINFRE)/.dotnet_home
+DIRENV_BIN      := $(HOME)/.local/bin/direnv
+DOTNET          := $(DOTNET_ROOT)/dotnet
 
-# === TARGETS ===
 all: install build
 
-install: install-direnv
-	@clear
-	@if [ -z "$(DOTNET)" ]; then \
-		echo "Instalando .NET SDK em $(DOTNET_ROOT)..."; \
-		curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- \
-			--install-dir $(DOTNET_ROOT) \
-			--channel LTS; \
-	else \
-		echo ".NET já está disponível via .envrc"; \
+install: install-direnv install-dotnet
+	@$(DOTNET) new install Avalonia.Templates --force
+
+install-direnv:
+	@if ! command -v direnv >/dev/null 2>&1 \
+		&& [ ! -x "$(DIRENV_BIN)" ]; then \
+		curl -sfL https://direnv.net/install.sh | bash; \
 	fi
-	@dotnet new install Avalonia.Templates --force
+	@direnv allow >/dev/null 2>&1 \
+		|| $(DIRENV_BIN) allow >/dev/null 2>&1 || true
+
+install-dotnet:
+	@mkdir -p "$(DOTNET_ROOT)" "$(NUGET_PACKAGES)" "$(DOTNET_CLI_HOME)"
+	@if [ ! -x "$(DOTNET)" ]; then \
+		curl -sSL https://raw.githubusercontent.com/dotnet/\
+install-scripts/main/src/dotnet-install.sh \
+			-o /tmp/dotnet-install.sh; \
+		chmod +x /tmp/dotnet-install.sh; \
+		/tmp/dotnet-install.sh \
+			--install-dir "$(DOTNET_ROOT)" --channel 9.0; \
+	fi
 
 build:
-	@dotnet build $(PROJ_NAME)
+	@$(DOTNET) build $(PROJ_NAME)
 
 run:
 	@clear
-	@dotnet run --project $(PROJ_NAME) $(ARGS)
-
-install-direnv:
-	$(INSTALL_DIRENV)
+	@$(DOTNET) run --project $(PROJ_NAME) $(ARGS)
 
 clean:
-	@clear
-	@echo "Cleaning .NET artifacts..."
-	@$(RM) **/bin **/obj .templateengine
+	@$(RM) src/bin src/obj .templateengine
 
 fclean: clean
-	@echo "Removing sgoinfre cache..."
-	@$(RM) $(HOME)/sgoinfre/$(shell basename $(CURDIR))/.venv
+	@$(RM) ".local"
 
-.PHONY: all install build run install-direnv clean fclean
+.PHONY: all install build run install-direnv install-dotnet clean fclean

@@ -6,3 +6,4 @@ data/output
 .uv_cache
 .venv
 *.egg-info/
+.local
