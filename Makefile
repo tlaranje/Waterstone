@@ -1,51 +1,70 @@
-RM        := rm -rf
-PROJ_NAME := src/src.csproj
+# --- Configurações de Caminho ---
+NAME          := HS_Overlay
+PROJ_DIR      := src
+CS_PROJ       := $(PROJ_DIR)/src.csproj
+SGOINFRE      := $(shell [ -d "$(HOME)/sgoinfre" ] \
+                 && echo "$(HOME)/sgoinfre/$(USER)/$(NAME)" \
+                 || echo "$(HOME)/.local/share/$(NAME)")
 
-SGOINFRE  := $(shell [ -d "$(HOME)/sgoinfre" ] \
-	&& echo "$(HOME)/sgoinfre/hs_overlay" \
-	|| echo "$(CURDIR)/.local")
+DOTNET_ROOT   := $(SGOINFRE)/dotnet
+PREFIX        := $(SGOINFRE)/local_libs
+VENV          := $(SGOINFRE)/.venv
+DOTNET        := $(DOTNET_ROOT)/dotnet
+MESON         := $(VENV)/bin/meson
+NINJA         := $(VENV)/bin/ninja
 
-DOTNET_ROOT     := $(SGOINFRE)/.dotnet
-NUGET_PACKAGES  := $(SGOINFRE)/.nuget
-DOTNET_CLI_HOME := $(SGOINFRE)/.dotnet_home
-DIRENV_BIN      := $(HOME)/.local/bin/direnv
-DOTNET          := $(DOTNET_ROOT)/dotnet
+# --- Variáveis de Ambiente ---
+export PATH            := $(DOTNET_ROOT):$(VENV)/bin:$(PATH)
+export LD_LIBRARY_PATH := $(PREFIX)/lib/x86_64-linux-gnu:$(PREFIX)/lib:$(LD_LIBRARY_PATH)
+export PKG_CONFIG_PATH := $(PREFIX)/lib/x86_64-linux-gnu/pkgconfig:$(PREFIX)/lib/pkgconfig:$(PKG_CONFIG_PATH)
 
 all: install build
 
-install: install-direnv install-dotnet
-	@$(DOTNET) new install Avalonia.Templates --force
-
-install-direnv:
-	@if ! command -v direnv >/dev/null 2>&1 \
-		&& [ ! -x "$(DIRENV_BIN)" ]; then \
-		curl -sfL https://direnv.net/install.sh | bash; \
+install: install-dotnet install-venv install-libs
+	@echo "🔥 Configurando projeto .NET com GTK3..."
+	@if [ ! -f $(CS_PROJ) ]; then \
+		$(DOTNET) new console -o $(PROJ_DIR); \
+		$(DOTNET) add $(PROJ_DIR) package GtkSharp; \
 	fi
-	@direnv allow >/dev/null 2>&1 \
-		|| $(DIRENV_BIN) allow >/dev/null 2>&1 || true
 
 install-dotnet:
-	@mkdir -p "$(DOTNET_ROOT)" "$(NUGET_PACKAGES)" "$(DOTNET_CLI_HOME)"
+	@mkdir -p "$(DOTNET_ROOT)"
 	@if [ ! -x "$(DOTNET)" ]; then \
-		curl -sSL https://raw.githubusercontent.com/dotnet/\
-install-scripts/main/src/dotnet-install.sh \
-			-o /tmp/dotnet-install.sh; \
-		chmod +x /tmp/dotnet-install.sh; \
-		/tmp/dotnet-install.sh \
+		echo "📥 Baixando .NET SDK..." ; \
+		curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin \
 			--install-dir "$(DOTNET_ROOT)" --channel 8.0; \
 	fi
 
+install-venv:
+	@if [ ! -d "$(VENV)" ]; then \
+		echo "🐍 Criando .venv para ferramentas de build..."; \
+		python3 -m venv $(VENV); \
+		$(VENV)/bin/pip install meson ninja; \
+	fi
+
+# MUDANÇA AQUI: Clonando a versão GTK3 do layer-shell
+install-libs:
+	@mkdir -p "$(SGOINFRE)/build"
+	@if [ ! -f "$(PREFIX)/lib/libgtk-layer-shell.so" ]; then \
+		echo "🛠️ Compilando gtk-layer-shell (GTK3)..."; \
+		cd $(SGOINFRE)/build && \
+		rm -rf gtk-layer-shell && \
+		git clone https://github.com/wmww/gtk-layer-shell.git --recursive && \
+		cd gtk-layer-shell && \
+		$(MESON) setup build --prefix=$(PREFIX) -Dintrospection=false -Dexamples=false -Dtests=false && \
+		$(NINJA) -C build install; \
+	fi
+
 build:
-	@$(DOTNET) build $(PROJ_NAME)
+	@$(DOTNET) build $(CS_PROJ)
 
 run:
-	@clear
-	@$(DOTNET) run --project $(PROJ_NAME) $(ARGS)
+	@$(DOTNET) run --project $(CS_PROJ)
 
 clean:
-	@$(RM) src/bin src/obj .templateengine
+	@rm -rf $(PROJ_DIR)/bin $(PROJ_DIR)/obj $(SGOINFRE)/build
 
 fclean: clean
-	@$(RM) ".local"
+	@rm -rf $(SGOINFRE)
 
-.PHONY: all install build run install-direnv install-dotnet clean fclean
+.PHONY: all install install-dotnet install-venv install-libs build run clean fclean
