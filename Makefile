@@ -1,70 +1,97 @@
-# --- Configurações de Caminho ---
-NAME          := HS_Overlay
-PROJ_DIR      := src
-CS_PROJ       := $(PROJ_DIR)/src.csproj
-SGOINFRE      := $(shell [ -d "$(HOME)/sgoinfre" ] \
-                 && echo "$(HOME)/sgoinfre/$(USER)/$(NAME)" \
-                 || echo "$(HOME)/.local/share/$(NAME)")
+# --- Configurações ---
+NAME     := HS_Overlay
+SRC_DIR  := src
+INC_DIR  := $(SRC_DIR)/includes
 
-DOTNET_ROOT   := $(SGOINFRE)/dotnet
-PREFIX        := $(SGOINFRE)/local_libs
-VENV          := $(SGOINFRE)/.venv
-DOTNET        := $(DOTNET_ROOT)/dotnet
-MESON         := $(VENV)/bin/meson
-NINJA         := $(VENV)/bin/ninja
+SGOINFRE := $(shell [ -d "$(HOME)/sgoinfre" ] \
+            && echo "$(HOME)/sgoinfre/$(USER)/$(NAME)" \
+            || echo "$(HOME)/.local/share/$(NAME)")
+PREFIX   := $(SGOINFRE)/local_libs
+VENV     := $(SGOINFRE)/.venv
+MESON    := $(VENV)/bin/meson
+NINJA    := $(VENV)/bin/ninja
 
-# --- Variáveis de Ambiente ---
-export PATH            := $(DOTNET_ROOT):$(VENV)/bin:$(PATH)
+# --- Ficheiros ---
+SRCS     := $(shell find $(SRC_DIR) -maxdepth 1 -name "*.c")
+OBJS     := $(SRCS:.c=.o)
+
+# --- Compilação (lazy = para avaliar após install) ---
+PKG_DEPS := gtk4 gtk4-layer-shell-0 wayland-client
+CC       := gcc
+CFLAGS    = -Wall -Wextra -I$(INC_DIR) \
+             $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --cflags $(PKG_DEPS))
+LDFLAGS   = $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --libs $(PKG_DEPS))
+
+# --- Ambiente ---
+export PATH            := $(VENV)/bin:$(PATH)
 export LD_LIBRARY_PATH := $(PREFIX)/lib/x86_64-linux-gnu:$(PREFIX)/lib:$(LD_LIBRARY_PATH)
-export PKG_CONFIG_PATH := $(PREFIX)/lib/x86_64-linux-gnu/pkgconfig:$(PREFIX)/lib/pkgconfig:$(PKG_CONFIG_PATH)
+export PKG_CONFIG_PATH := $(PREFIX)/share/pkgconfig:$(PREFIX)/lib/x86_64-linux-gnu/pkgconfig:$(PREFIX)/lib/pkgconfig:$(PKG_CONFIG_PATH)
+
+# =============================================================================
 
 all: install build
 
-install: install-dotnet install-venv install-libs
-	@echo "🔥 Configurando projeto .NET com GTK3..."
-	@if [ ! -f $(CS_PROJ) ]; then \
-		$(DOTNET) new console -o $(PROJ_DIR); \
-		$(DOTNET) add $(PROJ_DIR) package GtkSharp; \
-	fi
-
-install-dotnet:
-	@mkdir -p "$(DOTNET_ROOT)"
-	@if [ ! -x "$(DOTNET)" ]; then \
-		echo "📥 Baixando .NET SDK..." ; \
-		curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin \
-			--install-dir "$(DOTNET_ROOT)" --channel 8.0; \
-	fi
+install: install-venv install-wayland-protocols install-gtk4-layer-shell
 
 install-venv:
 	@if [ ! -d "$(VENV)" ]; then \
-		echo "🐍 Criando .venv para ferramentas de build..."; \
+		echo "🐍 Criando venv para meson/ninja..."; \
 		python3 -m venv $(VENV); \
-		$(VENV)/bin/pip install meson ninja; \
+		$(VENV)/bin/pip install -q meson ninja; \
 	fi
 
-# MUDANÇA AQUI: Clonando a versão GTK3 do layer-shell
-install-libs:
+install-wayland-protocols: install-venv
 	@mkdir -p "$(SGOINFRE)/build"
-	@if [ ! -f "$(PREFIX)/lib/libgtk-layer-shell.so" ]; then \
-		echo "🛠️ Compilando gtk-layer-shell (GTK3)..."; \
+	@if ! PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --exists wayland-protocols 2>/dev/null; then \
+		echo "🛠️  Compilando wayland-protocols..."; \
 		cd $(SGOINFRE)/build && \
-		rm -rf gtk-layer-shell && \
-		git clone https://github.com/wmww/gtk-layer-shell.git --recursive && \
-		cd gtk-layer-shell && \
-		$(MESON) setup build --prefix=$(PREFIX) -Dintrospection=false -Dexamples=false -Dtests=false && \
+		rm -rf wayland-protocols && \
+		git clone https://gitlab.freedesktop.org/wayland/wayland-protocols.git && \
+		cd wayland-protocols && \
+		$(MESON) setup build --prefix=$(PREFIX) -Dtests=false && \
 		$(NINJA) -C build install; \
+	else \
+		echo "✅ wayland-protocols já disponível, a saltar..."; \
 	fi
 
-build:
-	@$(DOTNET) build $(CS_PROJ)
+install-gtk4-layer-shell: install-venv
+	@mkdir -p "$(SGOINFRE)/build"
+	@if [ ! -f "$(PREFIX)/lib/libgtk4-layer-shell.so" ] && \
+	   [ ! -f "$(PREFIX)/lib/x86_64-linux-gnu/libgtk4-layer-shell.so" ]; then \
+		echo "🛠️  Compilando gtk4-layer-shell..."; \
+		cd $(SGOINFRE)/build && \
+		rm -rf gtk4-layer-shell && \
+		git clone https://github.com/wmww/gtk4-layer-shell.git --recursive && \
+		cd gtk4-layer-shell && \
+		$(MESON) setup build --prefix=$(PREFIX) \
+			-Dintrospection=false \
+			-Dexamples=false \
+			-Dtests=false \
+			-Dvapi=false && \
+		$(NINJA) -C build install; \
+	else \
+		echo "✅ gtk4-layer-shell já instalado, a saltar..."; \
+	fi
 
-run:
-	@$(DOTNET) run --project $(CS_PROJ)
+# --- Compilação ---
+build: $(NAME)
+
+$(NAME): $(OBJS)
+	$(CC) $(OBJS) -o $(NAME) $(LDFLAGS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+run: build
+	./$(NAME)
 
 clean:
-	@rm -rf $(PROJ_DIR)/bin $(PROJ_DIR)/obj $(SGOINFRE)/build
+	@rm -f $(OBJS)
 
 fclean: clean
+	@rm -f $(NAME)
 	@rm -rf $(SGOINFRE)
 
-.PHONY: all install install-dotnet install-venv install-libs build run clean fclean
+re: fclean all
+
+.PHONY: all install install-venv install-wayland-protocols install-gtk4-layer-shell build run clean fclean re
